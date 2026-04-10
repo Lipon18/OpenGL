@@ -16,4 +16,4 @@ This is a very basic OpenGL setup. No advanced or fancy features are included ye
 It is broken and unfinished, and may not build the project correctly.
 
 ## Assets
-Some 3D models are included for testing purposes (`.obj` .fbx).
+Some 3D models are included for testing purposes (`.obj` ` .fbx`).
