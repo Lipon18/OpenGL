@@ -1,0 +1,30 @@
+# Build files
+/build/
+/bin/
+/out/
+/Debug/
+/Release/
+/OpenGL/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+
+# Visual Studio
+.vs/
+*.vcxproj*
+*.sln
+*.user
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled objects
+*.o
+*.exe
+*.obj
+*.dll

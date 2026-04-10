@@ -1,0 +1,51 @@
+src/
+ ├── engine/
+ │    ├── core/
+ │    ├── renderer/
+ │    ├── platform/
+ │    ├── scene/
+ │    └── resources/
+ │
+ ├── game/
+ │    ├── actors/
+ │    ├── components/
+ │    └── game.cpp
+
+engine/core/
+ ├── application.h
+ ├── layer.h
+ ├── timestep.h
+
+engine/scene/
+ ├── scene.h
+ ├── actor.h
+ ├── component.h
+
+components/
+ ├── transform_component.h
+ ├── mesh_component.h
+ ├── camera_component.h
+
+engine/renderer/
+ ├── renderer.h
+ ├── render_command.h
+ ├── shader.h
+ ├── mesh.h
+
+renderer/opengl/
+ ├── opengl_renderer.cpp
+ ├── opengl_shader.cpp
+
+engine/platform/
+ ├── window/
+ ├── input/
+
+engine/resources/
+ ├── texture.h
+ ├── model_loader.h
+ ├── asset_manager.h
+
+game/
+ ├── actors/
+ │    ├── player.h
+ │    ├── light_actor.h
