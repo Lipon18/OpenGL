@@ -1,5 +1,5 @@
 # Build files
-/x64/
+x64/
 /build/
 /bin/
 /out/
@@ -27,5 +27,6 @@ Thumbs.db
 # Compiled objects
 *.o
 *.exe
-*.dll
 *.zip
+*.7z
+*.rar
