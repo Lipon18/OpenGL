@@ -19,7 +19,8 @@ public:
     CameraComponent* getActiveCamera() { return m_MainCamera; }
 
 private:
-    Actor* m_CubeActor = nullptr;
+    std::vector<Actor*> m_CubeActors;
+    //Actor* m_CubeActor = nullptr;
     Actor* m_FloorActor = nullptr;
     //Actor* m_SculptureActor = nullptr;
     CameraComponent* m_MainCamera = nullptr;

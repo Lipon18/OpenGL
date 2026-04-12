@@ -26,6 +26,27 @@ void MainLevel::init() {
 }
 
 void MainLevel::update(float deltaTime) {
+	//for (auto& actor : m_Actors) actor->updateComponents(deltaTime);
+
+	float time = static_cast<float>(glfwGetTime());
+
+	for (size_t i = 0; i < m_CubeActors.size(); i++) {
+		auto transformComponent = m_CubeActors[i]->getComponent<TransformComponent>();
+		if (!transformComponent) continue;
+
+		if (i % 2 == 0) {
+			glm::vec3 currentRotation = transformComponent->getRotation();
+			currentRotation.y += deltaTime * 50.0f;
+			transformComponent->setRotation(currentRotation);
+		}
+		else {
+			glm::vec3 position = transformComponent->getPosition();
+			position.x += cos(time + i) * 0.02f;
+			position.y += sin(time * 2.0f + i) * 0.01f;
+			transformComponent->setPosition(position);
+		}
+	}
+
 	for (auto& actor : m_Actors) actor->updateComponents(deltaTime);
 }
 
@@ -42,17 +63,30 @@ void MainLevel::setupCamera() {
 }
 
 void MainLevel::setupCube(std::shared_ptr<Shader> shader) {
+	//m_CubeActor = spawnActor();
+	auto cubeModel = std::make_shared<Model>("assets/models/cube.fbx");
 	auto cubeMaterial = std::make_shared<Material>(shader);
 	Texture cubeTexture = TextureLoader::loadTexture("assets/images/plank/Planks012_2K-PNG_Color.png");
 	cubeMaterial->setTexture(cubeTexture.id);
 
-	m_CubeActor = spawnActor();
-	auto cubeTransform = m_CubeActor->addComponent<TransformComponent>();
+	for (int i = 0; i < 10; i++) {
+		auto actor = spawnActor();
+		auto transformComponent = actor->addComponent<TransformComponent>();
+
+		float x = static_cast<float>((rand() % 20) - 10);
+		float y = static_cast<float>((rand() % 5) + 5);
+		float z = static_cast<float>((rand() % 20) - 10);
+
+		transformComponent->setPosition({ x, y, z });
+		actor->addComponent<MeshRendererComponent>(cubeModel, cubeMaterial);
+		m_CubeActors.push_back(actor);
+	}
+
+	/*auto cubeTransform = m_CubeActor->addComponent<TransformComponent>();
 	cubeTransform->setPosition({ 0.0f, 1.1f, 0.0f });
 	cubeTransform->setScale({ 1.0f, 1.0f, 1.0f });
 
-	auto cubeModel = std::make_shared<Model>("assets/models/cube.fbx");
-	m_CubeActor->addComponent<MeshRendererComponent>(cubeModel, cubeMaterial);
+	m_CubeActor->addComponent<MeshRendererComponent>(cubeModel, cubeMaterial);*/
 }
 
 void MainLevel::setupFloor(std::shared_ptr<Shader> shader) {
