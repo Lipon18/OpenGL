@@ -29,4 +29,6 @@ Thumbs.db
 *.exe
 *.zip
 *.7z
-*.rarresources/glm/doc/
+*.rar
+
+resources/glm/doc/
