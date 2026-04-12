@@ -108,12 +108,15 @@ void App::update(float deltaTime) {
 
 void App::render() {
 	m_Window.clear();
+	if (!m_MainCamera || !m_ActiveScene) return;
+
 	auto skybox = m_ActiveScene->getSkybox();
+	float aspect = 800.0f / 600.0f;
 
-	if (!m_MainCamera || !m_ActiveScene || !skybox) return;
+	gl_View = m_MainCamera->getViewMatrix();
+	gl_Projection = glm::perspective(glm::radians(static_cast<float>(m_MainCamera->getZoom())), aspect, 0.1f, 100.0f);
 
-	Renderer::DrawSkybox(skybox, m_MainCamera, 800.0f/600.0f);
-
+	Renderer::DrawSkybox(skybox, m_MainCamera, aspect);
 	m_ActiveScene->render();
 }
 

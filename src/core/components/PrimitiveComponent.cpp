@@ -4,6 +4,7 @@
 #include "renderer/material/Material.h"
 #include "core/mesh/Mesh.h"
 #include "renderer/shaders/Shader.h" 
+#include "renderer/Renderer.h"
 
 PrimitiveComponent::PrimitiveComponent(PrimitiveType type, std::shared_ptr<Material> material) : m_Type(type), m_Material(material) {
 	name = "PrimitiveComponent";
@@ -30,6 +31,11 @@ void PrimitiveComponent::render() {
 
     auto shader = m_Material->getShader();
     shader->setMat4("model", transform->getModelMatrix());
+    shader->setMat4("view", gl_View);
+    shader->setMat4("projection", gl_Projection);
+    shader->setVec2("uvScale", transform->getUVScale());
+    shader->setVec2("uvOffset", transform->getUVOffset());
+    shader->setBool("showDepth", Renderer::getShowDepth());
 
     m_Mesh->draw(*shader);
 }

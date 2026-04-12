@@ -25,17 +25,21 @@ Skybox::~Skybox() {
 
 void Skybox::render(const glm::mat4& view, const glm::mat4& projection) {
     glDepthFunc(GL_LEQUAL);
+    glDepthMask(GL_FALSE);
+
     m_Shader->activate();
 
     // Remove translation from the view matrix
     glm::mat4 viewMatrix = glm::mat4(glm::mat3(view));
 
+    m_Cubemap->bind(15);
+    m_Shader->setInt("skybox", 15);
     m_Shader->setMat4("view", viewMatrix);
     m_Shader->setMat4("projection", projection);
 
-    m_Cubemap->bind(0);
     glBindVertexArray(m_VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
+    glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
 }
