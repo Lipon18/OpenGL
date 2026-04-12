@@ -9,7 +9,8 @@ class Material;
 enum class PrimitiveType {
 	E_Cube,
 	E_Plane,
-	E_Cone
+	E_Cone,
+	E_Sphere
 };
 
 class PrimitiveComponent : public BaseComponent {
@@ -23,6 +24,7 @@ private:
 	void createCube();
 	void createPlane();
 	void createCone();
+	void createSphere();
 
 	PrimitiveType m_Type;
 	std::shared_ptr<Mesh> m_Mesh;

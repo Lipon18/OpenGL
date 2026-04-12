@@ -14,6 +14,7 @@ public:
 	virtual void update(float deltaTime) = 0;
 	virtual void render() = 0;
 	virtual std::shared_ptr<Skybox> getSkybox() { return nullptr; }
+	virtual void toggleDebugCollision() {}
 
 	Actor* spawnActor();
 

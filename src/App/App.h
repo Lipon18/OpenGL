@@ -61,6 +61,7 @@ private:
 	void moveRight(const  InputValue& val);
 	void TogglePause(const InputValue& val);
 	void ToggleDepthTest(const InputValue& val);
+	void ToggleCollisionDebug(const InputValue& val);
 	void mouseLook(const InputValue& val);
 	void mouseScroll(const InputValue& val);
 	void quit(const InputValue& val);

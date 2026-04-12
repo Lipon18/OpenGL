@@ -68,6 +68,7 @@ void App::setupInput() {
 
 	m_InputComponent->bindAction({ "Pause", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::TogglePause) });
 	m_InputComponent->bindAction({ "ToggleDepth", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::ToggleDepthTest) });
+	m_InputComponent->bindAction({ "ToggleCollision", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::ToggleCollisionDebug) });
 	m_InputComponent->bindAction({ "Quit", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::quit) });
 }
 
@@ -128,6 +129,7 @@ void App::setMappingContext() {
 	m_InputComponent->mapKey("MoveRight", GLFW_KEY_D, 1.0f);
 
 	m_InputComponent->mapKey("ToggleDepth", GLFW_KEY_F1);
+	m_InputComponent->mapKey("ToggleCollision", GLFW_KEY_F2);
 	m_InputComponent->mapKey("Pause", GLFW_KEY_P);
 	m_InputComponent->mapKey("Quit", GLFW_KEY_ESCAPE);
 }
@@ -157,6 +159,10 @@ void App::TogglePause(const InputValue& val) {
 
 void App::ToggleDepthTest(const InputValue& val) {
 	Renderer::setShowDepth(!Renderer::getShowDepth());
+}
+
+void App::ToggleCollisionDebug(const InputValue& val) {
+	m_ActiveScene->toggleDebugCollision();
 }
 
 void App::mouseLook(const InputValue& val) {

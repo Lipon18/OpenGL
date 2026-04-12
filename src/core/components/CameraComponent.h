@@ -22,6 +22,7 @@ public:
 
 	float getZoom() const { return m_Camera->getCameraZoom(); }
 	glm::vec3 getPosition() const { return m_Camera->getCameraPosition(); }
+	void setPosition(const glm::vec3& position) { m_Camera->setCameraPosition(position); }
 	glm::vec3 getFront() const { return m_Camera->getCameraFront(); }
 
 	TransformComponent* getTransform() const { return m_Transform; }
