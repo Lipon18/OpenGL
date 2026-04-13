@@ -16,6 +16,7 @@ class InputComponent;
 class CameraComponent;
 class Scene;
 struct InputValue;
+class Pawn;
 
 #define BIND_ACTION(fn) std::bind(&fn, this, std::placeholders::_1)
 
@@ -41,8 +42,10 @@ private:
 
 	bool m_IsPaused = false;
 	bool m_ShowDepth = false;
+	bool m_IsPawnPossessed = true;
 
 	CameraComponent* m_MainCamera;
+	Pawn* m_Pawn;
 
 	std::unique_ptr<Shader> m_ObjectShader;
 	std::unique_ptr<Actor> m_CameraActor;
@@ -62,6 +65,7 @@ private:
 	void TogglePause(const InputValue& val);
 	void ToggleDepthTest(const InputValue& val);
 	void ToggleCollisionDebug(const InputValue& val);
+	void TogglePossession();
 	void mouseLook(const InputValue& val);
 	void mouseScroll(const InputValue& val);
 	void quit(const InputValue& val);

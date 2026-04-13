@@ -66,10 +66,59 @@ void Collision::drawAABB(const AxisAlignedBoundingBox& box, const glm::vec3& col
 }
 
 void Collision::drawSphere(glm::vec3 center, float radius, const glm::vec3& color, std::shared_ptr<Shader> debugShader) {
-    AxisAlignedBoundingBox box;
-    box.min = center - glm::vec3(radius);
-    box.max = center + glm::vec3(radius);
-    drawAABB(box, color, debugShader);
+    const int segments = 32;
+
+    std::vector<glm::vec3> vertices;
+
+    // XY circle
+    for (int i = 0; i < segments; i++) {
+        float theta1 = (float)i / segments * 2.0f * glm::pi<float>();
+        float theta2 = (float)(i + 1) / segments * 2.0f * glm::pi<float>();
+
+        vertices.push_back(center + glm::vec3(cos(theta1) * radius, sin(theta1) * radius, 0));
+        vertices.push_back(center + glm::vec3(cos(theta2) * radius, sin(theta2) * radius, 0));
+    }
+
+    // XZ circle
+    for (int i = 0; i < segments; i++) {
+        float theta1 = (float)i / segments * 2.0f * glm::pi<float>();
+        float theta2 = (float)(i + 1) / segments * 2.0f * glm::pi<float>();
+
+        vertices.push_back(center + glm::vec3(cos(theta1) * radius, 0, sin(theta1) * radius));
+        vertices.push_back(center + glm::vec3(cos(theta2) * radius, 0, sin(theta2) * radius));
+    }
+
+    // YZ circle
+    for (int i = 0; i < segments; i++) {
+        float theta1 = (float)i / segments * 2.0f * glm::pi<float>();
+        float theta2 = (float)(i + 1) / segments * 2.0f * glm::pi<float>();
+
+        vertices.push_back(center + glm::vec3(0, cos(theta1) * radius, sin(theta1) * radius));
+        vertices.push_back(center + glm::vec3(0, cos(theta2) * radius, sin(theta2) * radius));
+    }
+
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    debugShader->activate();
+    debugShader->setVec3("color", color);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    debugShader->setMat4("model", model);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_LINES, 0, (GLsizei)vertices.size());
+
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
 }
 
 void Collision::initDebugBuffers() {

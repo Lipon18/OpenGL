@@ -16,7 +16,15 @@ public:
 	virtual std::shared_ptr<Skybox> getSkybox() { return nullptr; }
 	virtual void toggleDebugCollision() {}
 
-	Actor* spawnActor();
+	template<typename T = Actor, typename... Args>
+	inline T* spawnActor(Args&&... args) {
+		static_assert(std::is_base_of<Actor, T>::value, "T must derive from Actor");
+
+		auto actor = std::make_unique<T>(std::forward<Args>(args)...);
+		T* ptr = actor.get();
+		m_Actors.push_back(std::move(actor));
+		return ptr;
+	}
 
 protected:
 	std::vector<std::unique_ptr<Actor>> m_Actors;

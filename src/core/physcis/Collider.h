@@ -17,19 +17,19 @@ public:
 
 class BoxCollider : public Collider {
 public:
-	glm::vec3 halfSize;
+	glm::vec3 halfSize = glm::vec3(0.5f);
 	ColliderType getType() const override { return ColliderType::E_Box; }
 };
 
 class SphereCollider : public Collider {
 public:
-	float radius;
+	float radius = 0.5f;
 	ColliderType getType() const override { return ColliderType::E_Sphere; }
 };
 
 class CapsuleCollider : public Collider {
 public:
-	float radius;
+	float radius = 0.5f;
 	float height;
 	ColliderType getType() const override { return ColliderType::E_Capsule; }
 };

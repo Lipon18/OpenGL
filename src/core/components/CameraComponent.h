@@ -13,20 +13,24 @@ public:
 	void init() override;
 	void update(float deltaTime) override;
 
+	Camera* getCamera() const { return m_Camera.get(); }
+
 	glm::mat4 getViewMatrix() const { return m_Camera ? m_Camera->GetViewMatrix() : glm::mat4(1.0f); }
 	void processKeyboard(E_CameraMovement direction, float deltaTime) { m_Camera->ProcessKeyboard(direction, deltaTime); }
 	void processMouseMovement(float x, float y) { m_Camera->ProcessMouseMovement(x, y); }
 	void processMouseScroll(float offset) { m_Camera->ProcessMouseScroll(offset); }
+
 	void setYaw(float yaw) { m_Camera->setCamera_YAW(yaw); }
 	void setPitch(float pitch) { m_Camera->setCamera_PITCH(pitch); }
+	float getYaw() const { return m_Camera->getCamera_YAW(); }
+	float getPitch() const { return m_Camera->getCamera_PITCH(); }
 
 	float getZoom() const { return m_Camera->getCameraZoom(); }
 	glm::vec3 getPosition() const { return m_Camera->getCameraPosition(); }
-	void setPosition(const glm::vec3& position) { m_Camera->setCameraPosition(position); }
+	void setPosition(const glm::vec3& position) { if(m_Camera) m_Camera->setCameraPosition(position); }
 	glm::vec3 getFront() const { return m_Camera->getCameraFront(); }
 
 	TransformComponent* getTransform() const { return m_Transform; }
-
 	void setRelativeOffset(const glm::vec3& offset) { m_RelativeOffset = offset; }
 
 private:

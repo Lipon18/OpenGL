@@ -10,6 +10,8 @@
 #include "core/components/CameraComponent.h"
 #include "core/scene/MainLevel.h"
 #include "renderer/Renderer.h"
+#include "renderer/RenderGlobals.h"
+#include "core/actor/Pawn.h"
 
 glm::mat4 gl_View;
 glm::mat4 gl_Projection;
@@ -27,7 +29,12 @@ void App::init() {
 	m_ActiveScene = std::make_unique<MainLevel>();
 	m_ActiveScene->init();
 
-	m_MainCamera = static_cast<MainLevel*>(m_ActiveScene.get())->getActiveCamera();
+	//m_MainCamera = static_cast<MainLevel*>(m_ActiveScene.get())->getActiveCamera();
+	MainLevel* mainLvl = static_cast<MainLevel*>(m_ActiveScene.get());
+	if(mainLvl) {
+		m_MainCamera = mainLvl->getActiveCamera();
+		m_Pawn = mainLvl->getPawn();
+	}
 
 	initLighting();
 	setupInput();
@@ -70,6 +77,8 @@ void App::setupInput() {
 	m_InputComponent->bindAction({ "ToggleDepth", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::ToggleDepthTest) });
 	m_InputComponent->bindAction({ "ToggleCollision", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::ToggleCollisionDebug) });
 	m_InputComponent->bindAction({ "Quit", E_InputType::E_Digital, E_InputTrigger::E_Pressed, BIND_ACTION(App::quit) });
+
+	m_InputComponent->bindAction({ "Eject", E_InputType::E_Digital, E_InputTrigger::E_Pressed, [this](const InputValue& v) { TogglePossession(); }});
 }
 
 void App::run() {
@@ -109,13 +118,24 @@ void App::update(float deltaTime) {
 
 void App::render() {
 	m_Window.clear();
-	if (!m_MainCamera || !m_ActiveScene) return;
+	if (!m_ActiveScene) return;
+
+	Camera* activeCamera = nullptr;
+	if (m_IsPawnPossessed && m_Pawn) {
+		activeCamera = m_Pawn->getCameraComponent()->getCamera();
+	}
+	else if (m_MainCamera) {
+		activeCamera = m_MainCamera->getCamera();
+	}
+
+	if (!activeCamera) return;
 
 	auto skybox = m_ActiveScene->getSkybox();
 	float aspect = 800.0f / 600.0f;
 
-	gl_View = m_MainCamera->getViewMatrix();
-	gl_Projection = glm::perspective(glm::radians(static_cast<float>(m_MainCamera->getZoom())), aspect, 0.1f, 100.0f);
+	gl_View = activeCamera->GetViewMatrix();
+	float fov = static_cast<float>(activeCamera->getCameraZoom());
+	gl_Projection = glm::perspective(glm::radians(fov), aspect, 0.1f, 100.0f);
 
 	Renderer::DrawSkybox(skybox, m_MainCamera, aspect);
 	m_ActiveScene->render();
@@ -132,6 +152,7 @@ void App::setMappingContext() {
 	m_InputComponent->mapKey("ToggleCollision", GLFW_KEY_F2);
 	m_InputComponent->mapKey("Pause", GLFW_KEY_P);
 	m_InputComponent->mapKey("Quit", GLFW_KEY_ESCAPE);
+	m_InputComponent->mapKey("Eject", GLFW_KEY_F8);
 }
 
 void App::moveForward(const InputValue& val) {
@@ -163,6 +184,15 @@ void App::ToggleDepthTest(const InputValue& val) {
 
 void App::ToggleCollisionDebug(const InputValue& val) {
 	m_ActiveScene->toggleDebugCollision();
+}
+
+void App::TogglePossession() {
+	if (!m_Pawn) return;
+
+	m_IsPawnPossessed = !m_IsPawnPossessed;
+
+	m_Pawn->setPossessed(m_IsPawnPossessed);
+	std::cout << (m_IsPawnPossessed ? "Possessing Pawn" : "Ejected Free Camera Active") << std::endl;
 }
 
 void App::mouseLook(const InputValue& val) {
